@@ -43,7 +43,7 @@ before_script:
   # Download and setup Spark
   - mkdir thirdparty
   - curl -O http://d3kbcqa49mib13.cloudfront.net/spark-$TEST_SPARK_VERSION-bin-hadoop2.7.tgz
-  - tar xfz spark-$TEST_SPARK_VERSION-bin-hadoop-2.7.tgz
+  - tar xfz spark-$TEST_SPARK_VERSION-bin-hadoop2.7.tgz
 
 script:
   - pep8 --first --max-line-length=99 'find src/pygaia -name "*.py"'
