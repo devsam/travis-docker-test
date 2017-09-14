@@ -4,4 +4,3 @@
 msg = "This is test msg"
 
 print msg
-

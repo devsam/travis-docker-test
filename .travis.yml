@@ -48,7 +48,7 @@ before_script:
 script:
   - pep8 --first --max-line-length=99 `find src -name "*.py"`
   - docker cp src/sample.py gaia:/gaia/ && docker exec gaia python /gaia/sample.py
-  - echo `pwd`
+  - echo $SRCPATH
   - echo $SPARK_HOME
   - echo $PYTHONPATH
   - $SPARK_HOME/bin/pyspark --version
