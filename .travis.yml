@@ -31,6 +31,7 @@ matrix:
         TEST_SPARK_VERSION=2.1.0
         SPARK_HOME=`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7
         PYTHONPATH=`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH
+        SRCPATH=`pwd`/src
 
     # Spark 2.2.0
 #     - env: >
@@ -45,9 +46,8 @@ before_script:
   - tar xfz spark-$TEST_SPARK_VERSION-bin-hadoop2.7.tgz --directory thirdparty
 
 script:
-  - ls ./
   - pep8 --first --max-line-length=99 `find src -name "*.py"`
-  - docker cp src/sample.py /gaia && docker exec gaia python /gaia/sample.py
+  - docker cp src/sample.py gaia:/gaia/ && docker exec gaia python /gaia/sample.py
   - echo `pwd`
   - echo $SPARK_HOME
   - echo $PYTHONPATH
