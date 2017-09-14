@@ -11,8 +11,7 @@ before_install:
   - sudo apt-get update
   - echo 'DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock -s devicemapper"' | sudo tee /etc/default/docker > /dev/null
   - sudo service docker restart
-  - sleep 5
-#   - sudo docker pull centos:centos${OS_VERSION}
+  - sleep 3
   - docker build -t gaia-pygaia:0.1 .
   - docker run -itd --name gaia --net=host gaia-pygaia:0.1
   - jdk_switcher use oraclejdk8
@@ -22,6 +21,10 @@ install:
   - sudo pip install codecov
 
 python : 2.7
+
+env:
+  - TEST_KAFKA_VERSION=2.11-0.11.0.1
+  - PYTHONPATH="`pwd`/gaia/src/pygaia:$PYTHONPATH"
 
 matrix:
   include:
@@ -42,6 +45,11 @@ before_script:
   - mkdir thirdparty
   - curl -O http://d3kbcqa49mib13.cloudfront.net/spark-$TEST_SPARK_VERSION-bin-hadoop2.7.tgz
   - tar xfz spark-$TEST_SPARK_VERSION-bin-hadoop2.7.tgz --directory thirdparty
+  # Download and setup kafka(with zookeeper)
+  - curl -O http://mirror.apache-kr.org/kafka/0.11.0.1/kafka_2.11-0.11.0.1.tgz
+  - tar xfz kafka_$TEST_KAFKA_VERSION.tgz --directory thirdparty
+  - cd kafka_2.11-0.11.0.1 && bin/zookeeper-server-start.sh -daemon config/zookeeper.properties && bin/kafka-server-start.sh -daemon config/server.properties && bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic default
+  # TODO: Need consumer start.
 
 script:
   - pep8 --first --max-line-length=99 `find src -name "*.py"`
