@@ -26,10 +26,7 @@ python : 2.7
 matrix:
   include:
     # Spark 2.1.0
-    - env: 
-        - TEST_SPARK_VERSION=2.1.0 
-        - SPARK_HOME=`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7 
-        - PYTHONPATH=`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH
+    - env: TEST_SPARK_VERSION=2.1.0 SPARK_HOME=`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7 PYTHONPATH=`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH
 
     # Spark 2.2.0
     - env: >
