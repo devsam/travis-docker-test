@@ -33,10 +33,10 @@ matrix:
         PYTHONPATH=`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH
 
     # Spark 2.2.0
-    - env: >
-        TEST_SPARK_VERSION=2.2.0
-        SPARK_HOME=`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7
-        PYTHONPATH=`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH
+#     - env: >
+#         TEST_SPARK_VERSION=2.2.0
+#         SPARK_HOME=`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7
+#         PYTHONPATH=`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH
 
 before_script:
   # Download and setup Spark
@@ -45,7 +45,8 @@ before_script:
   - tar xfz spark-$TEST_SPARK_VERSION-bin-hadoop2.7.tgz --directory thirdparty
 
 script:
-  - pep8 --first --max-line-length=99 'find src/ -name "*.py"'
+  - ls ./
+  - pep8 --first --max-line-length=99 'find src -name "*.py"'
   - docker exec gaia ls /
   - echo $SPARK_HOME
   - echo $PYTHONPATH
