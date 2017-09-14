@@ -25,6 +25,7 @@ python : 2.7
 env:
   global:
     - TEST_KAFKA_VERSION=2.11-0.11.0.1
+    - KAFKA_HOME="`pwd`/thirdparty/kafka_$TEST_KAFKA_VERSION"
     - PYTHONPATH="`pwd`/gaia/src/pygaia:$PYTHONPATH"
   matrix:
     include:
@@ -48,7 +49,7 @@ before_script:
   # Download and setup kafka(with zookeeper)
   - curl -O http://mirror.apache-kr.org/kafka/0.11.0.1/kafka_2.11-0.11.0.1.tgz
   - tar xfz kafka_$TEST_KAFKA_VERSION.tgz --directory thirdparty
-  - cd kafka_2.11-0.11.0.1 && bin/zookeeper-server-start.sh -daemon config/zookeeper.properties && bin/kafka-server-start.sh -daemon config/server.properties && bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic default
+  - cd $KAFKA_HOME && bin/zookeeper-server-start.sh -daemon config/zookeeper.properties && bin/kafka-server-start.sh -daemon config/server.properties && bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic default
   # TODO: Need consumer start.
 
 script:
@@ -57,6 +58,8 @@ script:
   - echo $SPARK_HOME
   - echo $PYTHONPATH
   - $SPARK_HOME/bin/pyspark --version
+  - echo $KAFKA_HOME
+  - netstat -ntl | grep 2181
  # Run tests in Container
  # - tests/setup_tests.sh ${OS_VERSION}
  # - for f in `find src/pygaia/tests -name "*.py"`;do coverage run -p $f; rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi;done
