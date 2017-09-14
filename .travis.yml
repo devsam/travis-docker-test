@@ -32,16 +32,24 @@ matrix:
         SPARK_HOME=`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7
         PYTHONPATH=`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH
 
+    # Spark 2.2.0
+    - env: >
+        TEST_SPARK_VERSION=2.2.0
+        SPARK_HOME=`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7
+        ANGORA_HOME=`pwd`
+        PYTHONPATH=`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH
+
 before_script:
   # Download and setup Spark
   - mkdir thirdparty
   - curl -O http://d3kbcqa49mib13.cloudfront.net/spark-$TEST_SPARK_VERSION-bin-hadoop2.7.tgz
-  - tar xfzC spark-$TEST_SPARK_VERSION-bin-hadoop-2.7.tgz
+  - tar xfz spark-$TEST_SPARK_VERSION-bin-hadoop-2.7.tgz
 
 script:
   - pep8 --first --max-line-length=99 'find src/pygaia -name "*.py"'
   - docker exec gaia ls /
   - $SPARK_HOME/bin/spark-submit --version
+  - java -version
  # Run tests in Container
  # - tests/setup_tests.sh ${OS_VERSION}
  # - for f in `find src/pygaia/tests -name "*.py"`;do coverage run -p $f; rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi;done
