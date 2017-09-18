@@ -23,7 +23,8 @@ install:
 python : 2.7
 
 env:
-  global: TEST_KAFKA_VERSION=2.11-0.11.0.1 KAFKA_HOME="`pwd`/thirdparty/kafka_$TEST_KAFKA_VERSION" PYTHONPATH="`pwd`/gaia/src/pygaia:$PYTHONPATH" TEST_SPARK_VERSION=2.1.0 SPARK_HOME="`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7" PYTHONPATH="`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH"
+#  global: TEST_KAFKA_VERSION=2.11-0.11.0.1 KAFKA_HOME="`pwd`/thirdparty/kafka_$TEST_KAFKA_VERSION" PYTHONPATH="`pwd`/gaia/src/pygaia:$PYTHONPATH" TEST_SPARK_VERSION=2.1.0 SPARK_HOME="`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7" PYTHONPATH="`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH"
+  - TEST_KAFKA_VERSION=2.11-0.11.0.1 KAFKA_HOME="`pwd`/thirdparty/kafka_$TEST_KAFKA_VERSION" PYTHONPATH="`pwd`/gaia/src/pygaia:$PYTHONPATH" TEST_SPARK_VERSION=2.1.0 SPARK_HOME="`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7" PYTHONPATH="`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH"
 
 #   matrix:
 #     include:
