@@ -28,10 +28,10 @@ env:
   matrix:
     include:
       # Spark 2.1.0
-      - env: TEST_SPARK_VERSION=2.1.0 SPARK_HOME="`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7" PYTHONPATH="`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH"
+      env: TEST_SPARK_VERSION=2.1.0 SPARK_HOME="`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7" PYTHONPATH="`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH"
 
       # Spark 2.2.0
-      - env: TEST_SPARK_VERSION=2.2.0 SPARK_HOME=`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7 PYTHONPATH=`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH
+      env: TEST_SPARK_VERSION=2.2.0 SPARK_HOME=`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7 PYTHONPATH=`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH
 
 before_script:
   # Download and setup Spark
@@ -53,7 +53,6 @@ script:
   - echo $PYTHONPATH
   - $SPARK_HOME/bin/pyspark --version
   - echo $KAFKA_HOME
-  - netstat -ntl | grep 2181
  # Run tests in Container
  # - tests/setup_tests.sh ${OS_VERSION}
  # - for f in `find src/pygaia/tests -name "*.py"`;do coverage run -p $f; rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi;done
