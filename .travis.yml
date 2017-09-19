@@ -52,14 +52,15 @@ before_script:
   # Download and setup kafka(with zookeeper)
   - curl -O http://mirror.apache-kr.org/kafka/0.11.0.1/kafka_2.11-0.11.0.1.tgz
   - tar xfz kafka_$TEST_KAFKA_VERSION.tgz --directory thirdparty
+  - $KAFKA_HOME/bin/zookeeper-server-start.sh -daemon $KAFKA_HOME/config/zookeeper.properties
+  - $KAFKA_HOME/bin/kafka-server-start.sh -daemon $KAFKA_HOME/config/server.properties
+
 
 script:
   # TODO: Need consumer start.
   - pep8 --first --max-line-length=99 `find src -name "*.py"`
   - docker cp src/sample.py gaia:/gaia/ && docker exec gaia python /gaia/sample.py
   - $SPARK_HOME/bin/pyspark --version
-  - $KAFKA_HOME/bin/zookeeper-server-start.sh -daemon $KAFKA_HOME/config/zookeeper.properties
-  - $KAFKA_HOME/bin/kafka-server-start.sh -daemon $KAFKA_HOME/config/server.properties
   - $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic default
  # Run tests in Container
  # - tests/setup_tests.sh ${OS_VERSION}
