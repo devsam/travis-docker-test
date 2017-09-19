@@ -44,7 +44,7 @@ before_script:
   - tar xfz kafka_$TEST_KAFKA_VERSION.tgz --directory thirdparty
   - $KAFKA_HOME/bin/zookeeper-server-start.sh -daemon $KAFKA_HOME/config/zookeeper.properties 
   - $KAFKA_HOME/bin/kafka-server-start.sh -daemon $KAFKA_HOME/config/server.properties 
-  - $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --topic default
+  # - $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic default
   # TODO: Need consumer start.
 
 script:
@@ -54,6 +54,7 @@ script:
   - echo $PYTHONPATH
   - $SPARK_HOME/bin/pyspark --version
   - echo $KAFKA_HOME
+  - $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic default
  # Run tests in Container
  # - tests/setup_tests.sh ${OS_VERSION}
  # - for f in `find src/pygaia/tests -name "*.py"`;do coverage run -p $f; rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi;done
