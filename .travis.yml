@@ -23,37 +23,43 @@ install:
 python : 2.7
 
 env:
-#  global: TEST_KAFKA_VERSION=2.11-0.11.0.1 KAFKA_HOME="`pwd`/thirdparty/kafka_$TEST_KAFKA_VERSION" PYTHONPATH="`pwd`/gaia/src/pygaia:$PYTHONPATH" TEST_SPARK_VERSION=2.1.0 SPARK_HOME="`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7" PYTHONPATH="`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH"
-  - TEST_KAFKA_VERSION=2.11-0.11.0.1 KAFKA_HOME="`pwd`/thirdparty/kafka_$TEST_KAFKA_VERSION" PYTHONPATH="`pwd`/gaia/src/pygaia:$PYTHONPATH" TEST_SPARK_VERSION=2.1.0 SPARK_HOME="`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7" PYTHONPATH="`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH"
+  global: >
+    TEST_KAFKA_VERSION=2.11-0.11.0.1 
+    KAFKA_HOME="`pwd`/thirdparty/kafka_$TEST_KAFKA_VERSION" 
+    PYTHONPATH="`pwd`/gaia:$PYTHONPATH" 
+    TEST_SPARK_VERSION=2.1.0 SPARK_HOME="`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7"
+    PYTHONPATH="`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH"
 
-#   matrix:
-#     include:
-      # Spark 2.1.0
-#       env: TEST_SPARK_VERSION=2.1.0 SPARK_HOME="`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7" PYTHONPATH="`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH"
+matrix:
+  include:
+  # Spark 2.1.0
+    env: >
+      TEST_SPARK_VERSION=2.1.0 
+      SPARK_HOME="`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7" 
+#      PYTHONPATH="`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH"
 
-      # Spark 2.2.0
-#       env: TEST_SPARK_VERSION=2.2.0 SPARK_HOME=`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7 PYTHONPATH=`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH
+  # Spark 2.2.0
+    env: >
+      TEST_SPARK_VERSION=2.2.0 
+      SPARK_HOME="`pwd`/thirdparty/spark-$TEST_SPARK_VERSION-bin-hadoop2.7"
+#      PYTHONPATH="`pwd`/src/main/python:$SPARK_HOME/python/:$PYTHONPATH"
 
 before_script:
-  # Download and setup Spark
   - mkdir thirdparty
+  # Download and setup Spark
   - curl -O http://d3kbcqa49mib13.cloudfront.net/spark-$TEST_SPARK_VERSION-bin-hadoop2.7.tgz
   - tar xfz spark-$TEST_SPARK_VERSION-bin-hadoop2.7.tgz --directory thirdparty
   # Download and setup kafka(with zookeeper)
   - curl -O http://mirror.apache-kr.org/kafka/0.11.0.1/kafka_2.11-0.11.0.1.tgz
   - tar xfz kafka_$TEST_KAFKA_VERSION.tgz --directory thirdparty
-  - $KAFKA_HOME/bin/zookeeper-server-start.sh -daemon $KAFKA_HOME/config/zookeeper.properties 
-  - $KAFKA_HOME/bin/kafka-server-start.sh -daemon $KAFKA_HOME/config/server.properties 
-  # - $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic default
-  # TODO: Need consumer start.
 
 script:
+  # TODO: Need consumer start.
   - pep8 --first --max-line-length=99 `find src -name "*.py"`
   - docker cp src/sample.py gaia:/gaia/ && docker exec gaia python /gaia/sample.py
-  - echo $SPARK_HOME
-  - echo $PYTHONPATH
   - $SPARK_HOME/bin/pyspark --version
-  - echo $KAFKA_HOME
+  - $KAFKA_HOME/bin/zookeeper-server-start.sh -daemon $KAFKA_HOME/config/zookeeper.properties
+  - $KAFKA_HOME/bin/kafka-server-start.sh -daemon $KAFKA_HOME/config/server.properties
   - $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic default
  # Run tests in Container
  # - tests/setup_tests.sh ${OS_VERSION}
